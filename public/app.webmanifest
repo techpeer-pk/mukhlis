@@ -1,0 +1,60 @@
+{
+  "name": "مخلص - Mukhlis",
+  "short_name": "مخلص",
+  "description": "ایمانداری سے واپسی — Pakistan's privacy-first lost document recovery platform.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f9fafb",
+  "theme_color": "#1e293b",
+  "lang": "ur",
+  "dir": "rtl",
+  "categories": ["utilities", "social"],
+  "icons": [
+    {
+      "src": "/logo/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "کاغذ تلاش کریں",
+      "short_name": "Search",
+      "description": "Search for a lost document",
+      "url": "/search",
+      "icons": [{ "src": "/logo/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "کاغذ رپورٹ کریں",
+      "short_name": "Report",
+      "description": "Report a found document",
+      "url": "/report",
+      "icons": [{ "src": "/logo/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "میری رپورٹس",
+      "short_name": "My Reports",
+      "description": "View my reported documents",
+      "url": "/my-reports",
+      "icons": [{ "src": "/logo/logo.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mukhlis Home Screen"
+    }
+  ]
+}
