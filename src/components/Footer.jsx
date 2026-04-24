@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { GitHubIcon } from './Icons'
 
 export default function Footer() {
   const [open, setOpen] = useState(false)
@@ -15,6 +16,15 @@ export default function Footer() {
             className="text-slate-500 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-400 font-medium underline underline-offset-2 transition-colors"
           >
             TechPeer
+          </a>
+          {' '}·{' '}
+          <a
+            href="https://github.com/techpeer-pk/mukhlis"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-slate-500 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-400 font-medium underline underline-offset-2 transition-colors"
+          >
+            <GitHubIcon className="w-3 h-3" /> GitHub
           </a>
           {' '}·{' '}
           <button
