@@ -1,16 +1,53 @@
-# React + Vite
+# مخلص — Mukhlis
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Pakistan's privacy-first lost document recovery platform.
 
-Currently, two official plugins are available:
+**Live:** https://immukhlis.web.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What it does
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Finders report found documents (CNIC, degree, ATM card) using the document's unique number. Owners search by that number to get the finder's contact — no account needed to search.
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React 18 + Vite + Tailwind CSS v4
+- Firebase Realtime Database + Google Auth + Hosting
+- AES-256-CBC encryption on all sensitive fields
+- SHA-256 hash for searchable unique number (irreversible)
+- PWA — installable, offline-capable, app shortcuts
+
+## Setup
+
+```bash
+cp .env.example .env
+# fill in your Firebase config + VITE_ENCRYPTION_KEY
+npm install
+npm run dev
+```
+
+## Firebase Rules
+
+Add `.indexOn` to Realtime Database rules:
+
+```json
+{
+  "rules": {
+    "documents": {
+      ".indexOn": ["uniqueNumberHash", "reportedBy"]
+    }
+  }
+}
+```
+
+## Deploy
+
+```bash
+npm run build
+firebase deploy --only hosting
+```
+
+## License
+
+MIT © 2025 [TechPeer](https://techpeer.web.app)
