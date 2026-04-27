@@ -1,5 +1,12 @@
 import { useState } from 'react'
 import { GitHubIcon } from './Icons'
+import HelpModal from './HelpModal'
+
+const QuestionIcon = ({ className = 'w-3 h-3' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+  </svg>
+)
 
 const GlobeIcon = ({ className = 'w-3 h-3' }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
@@ -15,6 +22,7 @@ const ShieldIcon = ({ className = 'w-3 h-3' }) => (
 
 export default function Footer() {
   const [open, setOpen] = useState(false)
+  const [help, setHelp] = useState(false)
 
   return (
     <>
@@ -45,8 +53,17 @@ export default function Footer() {
           >
             <ShieldIcon /> Disclaimer
           </button>
+          {' '}·{' '}
+          <button
+            onClick={() => setHelp(true)}
+            className="inline-flex items-center gap-1 text-slate-500 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-400 font-medium underline underline-offset-2 transition-colors"
+          >
+            <QuestionIcon /> Help
+          </button>
         </p>
       </footer>
+
+      {help && <HelpModal onClose={() => setHelp(false)} />}
 
       {open && (
         <div
