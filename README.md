@@ -4,7 +4,7 @@
 
 <br />
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=26&pause=1000&color=1E293B&center=true&vCenter=true&width=500&lines=مخلص+%E2%80%94+Mukhlis;Pakistan's+Lost+Document+Platform;ایمانداری+سے+واپسی+%7C+Find+with+Trust)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=26&pause=1000&color=1E293B&center=true&vCenter=true&width=680&lines=مخلص+%E2%80%94+Mukhlis;Pakistan's+Lost+Document+Platform;ایمانداری+سے+واپسی+%7C+Find+with+Trust)](https://git.io/typing-svg)
 
 <br />
 
