@@ -14,10 +14,10 @@
 
 <br />
 
-[🚀 View Live App](https://immukhlis.web.app) &nbsp;·&nbsp;
-[🐛 Report Bug](https://github.com/techpeer-pk/mukhlis/issues/new?labels=bug) &nbsp;·&nbsp;
-[💡 Request Feature](https://github.com/techpeer-pk/mukhlis/issues/new?labels=enhancement) &nbsp;·&nbsp;
-[🤝 Contributing](CONTRIBUTING.md)
+[View Live App](https://immukhlis.web.app) &nbsp;·&nbsp;
+[Report Bug](https://github.com/techpeer-pk/mukhlis/issues/new?labels=bug) &nbsp;·&nbsp;
+[Request Feature](https://github.com/techpeer-pk/mukhlis/issues/new?labels=enhancement) &nbsp;·&nbsp;
+[Contributing](CONTRIBUTING.md)
 
 <br />
 
