@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /my-reports
+Disallow: /login
+
+Sitemap: https://immukhlis.web.app/sitemap.xml
