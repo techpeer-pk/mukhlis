@@ -14,6 +14,13 @@
 
 <br />
 
+[🚀 View Live App](https://immukhlis.web.app) &nbsp;·&nbsp;
+[🐛 Report Bug](https://github.com/techpeer-pk/mukhlis/issues/new?labels=bug) &nbsp;·&nbsp;
+[💡 Request Feature](https://github.com/techpeer-pk/mukhlis/issues/new?labels=enhancement) &nbsp;·&nbsp;
+[🤝 Contributing](CONTRIBUTING.md)
+
+<br />
+
 ![React](https://img.shields.io/badge/React_18-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
