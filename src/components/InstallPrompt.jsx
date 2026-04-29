@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowLeftIcon } from './Icons'
+import { useLanguage } from '../context/LanguageContext'
 
 const ShareIcon = ({ className = 'w-5 h-5' }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
@@ -23,23 +23,24 @@ const isIOS = () => /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())
 const isInStandaloneMode = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone
 
 export default function InstallPrompt() {
+  const { t } = useLanguage()
   const [prompt, setPrompt] = useState(null)
   const [show, setShow] = useState(false)
   const [showIOS, setShowIOS] = useState(false)
 
   useEffect(() => {
     if (isInStandaloneMode()) return
-    if (localStorage.getItem('pwa-dismissed')) return
+    if (sessionStorage.getItem('pwa-dismissed-session')) return
 
     if (isIOS()) {
-      setTimeout(() => setShowIOS(true), 3000)
+      setTimeout(() => setShowIOS(true), 5000)
       return
     }
 
     const handler = e => {
       e.preventDefault()
       setPrompt(e)
-      setTimeout(() => setShow(true), 3000)
+      setTimeout(() => setShow(true), 5000)
     }
     window.addEventListener('beforeinstallprompt', handler)
     return () => window.removeEventListener('beforeinstallprompt', handler)
@@ -48,7 +49,7 @@ export default function InstallPrompt() {
   const dismiss = () => {
     setShow(false)
     setShowIOS(false)
-    localStorage.setItem('pwa-dismissed', '1')
+    sessionStorage.setItem('pwa-dismissed-session', '1')
   }
 
   const install = async () => {
@@ -61,8 +62,8 @@ export default function InstallPrompt() {
   if (!show && !showIOS) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-4 bg-black/40 dark:bg-black/60">
-      <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl p-5">
+    <div className="fixed bottom-4 left-4 right-4 z-50 flex justify-center pointer-events-none">
+      <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl p-5 pointer-events-auto animate-slide-up">
 
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -79,21 +80,19 @@ export default function InstallPrompt() {
 
         {show && (
           <>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
-              App install karein — home screen pe shortcut, offline access, faster loading.
-            </p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">{t('install_text')}</p>
             <div className="flex gap-2">
               <button
                 onClick={install}
                 className="flex-1 flex items-center justify-center gap-2 bg-slate-800 dark:bg-slate-700 text-white font-semibold py-3 rounded-xl text-sm transition-all"
               >
-                <DownloadIcon className="w-4 h-4" /> Install
+                <DownloadIcon className="w-4 h-4" /> {t('install')}
               </button>
               <button
                 onClick={dismiss}
                 className="px-4 border border-gray-200 dark:border-gray-600 text-slate-500 dark:text-slate-400 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                Later
+                {t('later')}
               </button>
             </div>
           </>
@@ -101,28 +100,26 @@ export default function InstallPrompt() {
 
         {showIOS && (
           <>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
-              Home screen pe add karein:
-            </p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{t('ios_title')}</p>
             <ol className="space-y-2 mb-4">
               <li className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-slate-300 text-xs font-bold flex items-center justify-center shrink-0">1</span>
-                Tap <ShareIcon className="w-4 h-4 mx-1 text-blue-500" /> Share button (browser bottom bar)
+                {t('ios_step1')} <ShareIcon className="w-4 h-4 mx-1 text-blue-500" />
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-slate-300 text-xs font-bold flex items-center justify-center shrink-0">2</span>
-                "Add to Home Screen" select karein
+                {t('ios_step2')}
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-slate-300 text-xs font-bold flex items-center justify-center shrink-0">3</span>
-                "Add" tap karein
+                {t('ios_step3')}
               </li>
             </ol>
             <button
               onClick={dismiss}
               className="w-full border border-gray-200 dark:border-gray-600 text-slate-500 dark:text-slate-400 py-3 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-              Theek hai
+              {t('ok')}
             </button>
           </>
         )}

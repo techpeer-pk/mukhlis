@@ -4,20 +4,23 @@ import { ref, query, orderByChild, equalTo, get } from 'firebase/database'
 import { db } from '../firebase'
 import { decrypt, hash, hashRaw } from '../utils/crypto'
 import { toTitleCase, toCapitalized } from '../utils/format'
+import { useLanguage } from '../context/LanguageContext'
 import { SearchIcon, CheckCircleIcon, ExclamationIcon, PhoneIcon, ArrowLeftIcon, ArrowRightIcon } from '../components/Icons'
 import ThemeToggle from '../components/ThemeToggle'
+import LanguageToggle from '../components/LanguageToggle'
 import ShareButton from '../components/ShareButton'
 import Footer from '../components/Footer'
 
-const TYPE_LABELS = {
-  educational: 'Educational',
-  id:          'ID Document',
-  financial:   'Financial',
-  other:       'Other',
+const TYPE_KEYS = {
+  educational: 'type_educational',
+  id:          'type_id',
+  financial:   'type_financial',
+  other:       'type_other',
 }
 
 export default function SearchPage() {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const [input, setInput] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -57,7 +60,7 @@ export default function SearchPage() {
         setResult('not_found')
       }
     } catch {
-      setError('تلاش نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔')
+      setError(t('search_error'))
     } finally {
       setLoading(false)
     }
@@ -69,13 +72,16 @@ export default function SearchPage() {
 
         <div className="flex justify-between items-center mb-2">
           <ShareButton />
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="text-center mb-8">
           <img src="/logo/logo.png" alt="Mukhlis" className="w-16 h-16 mx-auto mb-4 rounded-2xl shadow-sm" />
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">مخلص</h1>
-          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">اپنا کھویا ہوا کاغذ تلاش کریں</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{t('app_name')}</h1>
+          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">{t('search_subtitle')}</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
@@ -85,7 +91,7 @@ export default function SearchPage() {
               value={input}
               onChange={e => { setInput(e.target.value); setResult(null); setError(null) }}
               onKeyDown={e => e.key === 'Enter' && search()}
-              placeholder="Registration / ID number"
+              placeholder={t('search_placeholder')}
               className="flex-1 border border-gray-200 dark:border-gray-600 focus:border-slate-400 dark:focus:border-slate-500 rounded-xl px-4 py-3 text-base outline-none bg-gray-50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-600 text-slate-800 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-colors"
             />
             <button
@@ -96,7 +102,7 @@ export default function SearchPage() {
               <SearchIcon className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">e.g. 12345-2020 · 42101-1234567-1</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">{t('search_hint')}</p>
 
           {error && (
             <div className="mt-4 flex items-center gap-2 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-xl px-4 py-3 text-sm text-red-500 dark:text-red-400">
@@ -110,28 +116,44 @@ export default function SearchPage() {
               <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
                 <SearchIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
               </div>
-              <p className="text-slate-700 dark:text-slate-300 font-semibold text-sm">ابھی تک نہیں ملا</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">No one has reported this document yet.</p>
+              <p className="text-slate-700 dark:text-slate-300 font-semibold text-sm">{t('not_found_title')}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{t('not_found_sub')}</p>
               <button onClick={() => navigate('/login')} className="mt-4 flex items-center gap-1 mx-auto text-slate-500 dark:text-slate-400 text-xs underline underline-offset-2">
-                Report it here <ArrowRightIcon />
+                {t('report_it')} <ArrowRightIcon />
               </button>
             </div>
           )}
 
           {result && result !== 'not_found' && !claimed && (
             <div className="mt-4">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center">1</span>
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{t('step1_label')}</span>
+                </div>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="w-5 h-5 rounded-full bg-slate-300 dark:bg-gray-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+                  <span className="text-xs text-gray-400 dark:text-gray-500">{t('step2_label')}</span>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2 mb-3">
                 <span className="flex items-center gap-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-100 dark:border-emerald-800">
-                  <CheckCircleIcon className="w-3.5 h-3.5" /> مل گیا
+                  <CheckCircleIcon className="w-3.5 h-3.5" /> {t('found_badge')}
                 </span>
-                <span className="text-xs text-gray-400 dark:text-gray-500">{TYPE_LABELS[result.type] || result.type}</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">{t(TYPE_KEYS[result.type]) || result.type}</span>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 text-sm text-slate-600 dark:text-slate-300 space-y-1 mb-4">
-                {result.firstName && <p><span className="text-gray-400 dark:text-gray-500">Name:</span> {result.firstName} {result.lastName}</p>}
-                <p><span className="text-gray-400 dark:text-gray-500">Location:</span> {result.foundLocation}</p>
-                <p><span className="text-gray-400 dark:text-gray-500">Date:</span> {new Date(result.foundDate).toLocaleDateString()}</p>
+                {result.firstName && <p><span className="text-gray-400 dark:text-gray-500">{t('label_name')}:</span> {result.firstName} {result.lastName}</p>}
+                <p><span className="text-gray-400 dark:text-gray-500">{t('label_location')}:</span> {result.foundLocation}</p>
+                <p><span className="text-gray-400 dark:text-gray-500">{t('label_date')}:</span> {new Date(result.foundDate).toLocaleDateString()}</p>
               </div>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">Enter your phone to get finder's contact:</p>
+
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 mb-3">
+                <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">{t('enter_phone_title')}</p>
+                <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">{t('enter_phone_sub')}</p>
+              </div>
               <input
                 type="tel"
                 value={claimerPhone}
@@ -144,31 +166,42 @@ export default function SearchPage() {
                 disabled={claimerPhone.trim().length < 10}
                 className="w-full bg-slate-800 dark:bg-slate-700 disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400 text-white font-semibold py-3 rounded-xl transition-all text-sm"
               >
-                Claim My Document
+                {t('get_number_btn')}
               </button>
             </div>
           )}
 
           {claimed && result && result !== 'not_found' && (
             <div className="mt-4 text-center">
-              <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
-                <CheckCircleIcon className="w-7 h-7 text-emerald-500 dark:text-emerald-400" />
+              <div className="flex items-center gap-2 justify-center mb-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center">1</span>
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{t('step1_label')}</span>
+                </div>
+                <div className="flex-1 h-px bg-emerald-300 dark:bg-emerald-700 max-w-[40px]" />
+                <div className="flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center">2</span>
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{t('step2_label')}</span>
+                </div>
               </div>
-              <p className="font-semibold text-slate-700 dark:text-slate-200 text-sm mb-1">Finder ka number:</p>
-              <div className="flex items-center justify-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-slate-100 border border-gray-200 dark:border-gray-600 mb-3">
-                <PhoneIcon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                {result.finderPhone}
-              </div>
-              <p className="text-xs text-gray-400 dark:text-gray-500">Public jagah milen — please</p>
-              <button onClick={() => navigate('/')} className="mt-4 w-full bg-slate-800 dark:bg-slate-700 text-white py-3 rounded-xl font-semibold text-sm">
-                Done
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">{t('finder_number_label')}</p>
+              <p className="text-3xl font-bold tracking-wide text-slate-800 dark:text-slate-100 mb-4">{result.finderPhone}</p>
+              <a
+                href={`tel:${result.finderPhone}`}
+                className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-xl transition-all text-sm mb-2"
+              >
+                <PhoneIcon className="w-4 h-4" /> {t('call_now')}
+              </a>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">{t('public_place')}</p>
+              <button onClick={() => navigate('/')} className="w-full border border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 py-2.5 rounded-xl text-sm">
+                {t('done')}
               </button>
             </div>
           )}
         </div>
 
         <button onClick={() => navigate('/')} className="w-full flex items-center justify-center gap-1.5 mt-5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-          <ArrowLeftIcon /> Back
+          <ArrowLeftIcon /> {t('back')}
         </button>
         <Footer />
       </div>

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { LanguageProvider } from './context/LanguageContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import InstallPrompt from './components/InstallPrompt'
 import Home from './pages/Home'
@@ -12,6 +13,7 @@ import MyReports from './pages/MyReports'
 export default function App() {
   return (
     <ThemeProvider>
+      <LanguageProvider>
       <AuthProvider>
         <InstallPrompt />
         <BrowserRouter>
@@ -28,6 +30,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </LanguageProvider>
     </ThemeProvider>
   )
 }

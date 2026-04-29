@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, googleProvider } from '../firebase'
 import { useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
 import ThemeToggle from '../components/ThemeToggle'
+import LanguageToggle from '../components/LanguageToggle'
 import ShareButton from '../components/ShareButton'
 import Footer from '../components/Footer'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const user = useAuth()
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (user) navigate('/report', { replace: true })
@@ -30,13 +33,16 @@ export default function LoginPage() {
 
         <div className="flex justify-between items-center mb-2">
           <ShareButton />
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="text-center mb-8">
           <img src="/logo/logo.png" alt="Mukhlis" className="w-16 h-16 mx-auto mb-4 rounded-2xl shadow-sm" />
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">مخلص</h1>
-          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Login to report a found document</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{t('app_name')}</h1>
+          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">{t('login_subtitle')}</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
@@ -45,16 +51,16 @@ export default function LoginPage() {
             className="w-full flex items-center justify-center gap-3 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-200 font-medium py-3 rounded-xl transition-all"
           >
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="" />
-            Continue with Google
+            {t('continue_google')}
           </button>
 
           <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-5">
-            Only needed to report a found document.<br />Searching is always free & anonymous.
+            {t('login_note_1')}<br />{t('login_note_2')}
           </p>
         </div>
 
         <button onClick={() => navigate('/')} className="w-full text-center mt-5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-          ← Back
+          {t('back')}
         </button>
         <Footer />
       </div>

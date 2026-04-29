@@ -6,18 +6,13 @@ import { db, auth } from '../firebase'
 import { encrypt, hash } from '../utils/crypto'
 import { toTitleCase, toCapitalized } from '../utils/format'
 import { useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
 import UserAvatar from '../components/UserAvatar'
 import ThemeToggle from '../components/ThemeToggle'
+import LanguageToggle from '../components/LanguageToggle'
 import ShareButton from '../components/ShareButton'
 import { AcademicCapIcon, IdentificationIcon, CreditCardIcon, ClipboardIcon, ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon } from '../components/Icons'
 import Footer from '../components/Footer'
-
-const DOC_TYPES = [
-  { value: 'educational', label: 'Educational',  sub: 'Degree, transcript, student ID',  Icon: AcademicCapIcon },
-  { value: 'id',          label: 'ID Document',  sub: 'CNIC, passport, driving license', Icon: IdentificationIcon },
-  { value: 'financial',   label: 'Financial',    sub: 'ATM card, checkbook',             Icon: CreditCardIcon },
-  { value: 'other',       label: 'Other',        sub: 'Bills, receipts, etc.',           Icon: ClipboardIcon },
-]
 
 const STEPS = ['Type', 'Number', 'Name', 'Contact', 'Location']
 
@@ -26,10 +21,18 @@ const inputCls = 'w-full border border-gray-200 dark:border-gray-600 focus:borde
 export default function ReportPage() {
   const navigate = useNavigate()
   const user = useAuth()
+  const { t } = useLanguage()
   const logout = () => signOut(auth).then(() => navigate('/'))
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ type:'', uniqueNumber:'', firstName:'', lastName:'', finderPhone:'', foundLocation:'' })
+
+  const DOC_TYPES = [
+    { value: 'educational', labelKey: 'type_educational', subKey: 'type_educational_sub', Icon: AcademicCapIcon },
+    { value: 'id',          labelKey: 'type_id',          subKey: 'type_id_sub',          Icon: IdentificationIcon },
+    { value: 'financial',   labelKey: 'type_financial',   subKey: 'type_financial_sub',   Icon: CreditCardIcon },
+    { value: 'other',       labelKey: 'type_other',       subKey: 'type_other_sub',       Icon: ClipboardIcon },
+  ]
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }))
 
@@ -73,16 +76,16 @@ export default function ReportPage() {
             <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-4">
               <CheckCircleIcon className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
             </div>
-            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">رپورٹ ہو گئی</h3>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">Document listed. Owner will find it when they search.</p>
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">{t('success_title')}</h3>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mb-6">{t('success_sub')}</p>
             <button onClick={() => navigate('/my-reports')} className="w-full bg-slate-800 dark:bg-slate-700 text-white py-3 rounded-xl font-semibold text-sm mb-2">
-              My Reports دیکھیں
+              {t('view_my_reports')}
             </button>
             <button
               onClick={() => { setStep(0); setForm({ type:'', uniqueNumber:'', firstName:'', lastName:'', finderPhone:'', foundLocation:'' }) }}
               className="w-full border border-gray-200 dark:border-gray-700 text-slate-600 dark:text-slate-400 py-3 rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-              ایک اور Report کریں
+              {t('report_another')}
             </button>
           </div>
         </div>
@@ -96,20 +99,23 @@ export default function ReportPage() {
 
         <div className="flex justify-between items-center mb-2">
           <ShareButton />
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="text-center mb-8">
           <img src="/logo/logo.png" alt="Mukhlis" className="w-16 h-16 mx-auto mb-4 rounded-2xl shadow-sm" />
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">کاغذ رپورٹ کریں</h1>
-          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Report a Found Document</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{t('report_title')}</h1>
+          <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">{t('report_subtitle')}</p>
           {user && (
             <div className="flex items-center justify-center gap-2 mt-3">
               <UserAvatar user={user} />
               <span className="text-xs text-slate-400 dark:text-slate-500 max-w-[120px] truncate">{user.displayName || user.email}</span>
-              <button onClick={() => navigate('/my-reports')} className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors ml-1">My Reports</button>
+              <button onClick={() => navigate('/my-reports')} className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors ml-1">{t('my_reports')}</button>
               <span className="text-gray-300 dark:text-gray-600 text-xs">|</span>
-              <button onClick={logout} className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Logout</button>
+              <button onClick={logout} className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">{t('logout')}</button>
             </div>
           )}
         </div>
@@ -123,8 +129,8 @@ export default function ReportPage() {
 
           {step === 0 && (
             <div className="space-y-2">
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">Document ka type select karein:</p>
-              {DOC_TYPES.map(({ value, label, sub, Icon }) => (
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{t('doc_type_prompt')}</p>
+              {DOC_TYPES.map(({ value, labelKey, subKey, Icon }) => (
                 <button
                   key={value}
                   onClick={() => { set('type', value); setStep(1) }}
@@ -132,8 +138,8 @@ export default function ReportPage() {
                 >
                   <Icon className="w-5 h-5 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>
-                    <span className="block font-medium text-slate-800 dark:text-slate-200 text-sm">{label}</span>
-                    <span className="block text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</span>
+                    <span className="block font-medium text-slate-800 dark:text-slate-200 text-sm">{t(labelKey)}</span>
+                    <span className="block text-xs text-gray-400 dark:text-gray-500 mt-0.5">{t(subKey)}</span>
                   </span>
                 </button>
               ))}
@@ -142,34 +148,34 @@ export default function ReportPage() {
 
           {step === 1 && (
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Document par likha unique number:</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">e.g. 12345-2020, 42101-1234567-1</p>
-              <input autoFocus value={form.uniqueNumber} onChange={e => set('uniqueNumber', e.target.value)} placeholder="Registration / ID number" className={inputCls} />
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('unique_number_prompt')}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">{t('unique_number_hint')}</p>
+              <input autoFocus value={form.uniqueNumber} onChange={e => set('uniqueNumber', e.target.value)} placeholder={t('search_placeholder')} className={inputCls} />
             </div>
           )}
 
           {step === 2 && (
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Document par malik ka naam <span className="text-gray-300 dark:text-gray-600">(optional)</span></p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('name_prompt')}</p>
               <div className="space-y-2 mt-3">
-                <input autoFocus value={form.firstName} onChange={e => set('firstName', e.target.value)} placeholder="First name" className={inputCls} />
-                <input value={form.lastName} onChange={e => set('lastName', e.target.value)} placeholder="Last name" className={inputCls} />
+                <input autoFocus value={form.firstName} onChange={e => set('firstName', e.target.value)} placeholder={t('first_name')} className={inputCls} />
+                <input value={form.lastName} onChange={e => set('lastName', e.target.value)} placeholder={t('last_name')} className={inputCls} />
               </div>
             </div>
           )}
 
           {step === 3 && (
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Aapka phone number:</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">Sirf match hone par dikhaya jayega</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{t('phone_prompt')}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">{t('phone_hint')}</p>
               <input autoFocus type="tel" value={form.finderPhone} onChange={e => set('finderPhone', e.target.value)} placeholder="03XX-XXXXXXX" className={inputCls} />
             </div>
           )}
 
           {step === 4 && (
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">Kahan mila tha?</p>
-              <input autoFocus value={form.foundLocation} onChange={e => set('foundLocation', e.target.value)} placeholder="City (e.g. Karachi)" className={inputCls} />
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{t('location_prompt')}</p>
+              <input autoFocus value={form.foundLocation} onChange={e => set('foundLocation', e.target.value)} placeholder={t('city_placeholder')} className={inputCls} />
             </div>
           )}
 
@@ -179,13 +185,13 @@ export default function ReportPage() {
               onClick={step === 4 ? submit : () => setStep(s => s + 1)}
               className="w-full mt-5 flex items-center justify-center gap-2 bg-slate-800 dark:bg-slate-700 disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400 text-white font-semibold py-3 rounded-xl transition-all text-sm"
             >
-              {loading ? 'Submit ho raha hai...' : step === 4 ? 'Submit Report' : <><span>Next</span><ArrowRightIcon /></>}
+              {loading ? t('submitting') : step === 4 ? t('submit_report') : <><span>{t('next')}</span><ArrowRightIcon /></>}
             </button>
           )}
         </div>
 
         <button onClick={() => step > 0 ? setStep(s => s - 1) : navigate('/')} className="w-full flex items-center justify-center gap-1.5 mt-5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-          <ArrowLeftIcon /> Back
+          <ArrowLeftIcon /> {t('back')}
         </button>
         <Footer />
       </div>
