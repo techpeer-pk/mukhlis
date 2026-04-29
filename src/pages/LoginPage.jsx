@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext'
 import ThemeToggle from '../components/ThemeToggle'
 import LanguageToggle from '../components/LanguageToggle'
 import ShareButton from '../components/ShareButton'
+import { ArrowLeftIcon } from '../components/Icons'
 import Footer from '../components/Footer'
 
 export default function LoginPage() {
@@ -59,8 +60,8 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <button onClick={() => navigate('/')} className="w-full text-center mt-5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-          {t('back')}
+        <button onClick={() => navigate('/')} className="w-full flex items-center justify-center gap-1.5 mt-5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+          <ArrowLeftIcon /> {t('back')}
         </button>
         <Footer />
       </div>

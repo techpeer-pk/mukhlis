@@ -5,11 +5,19 @@ import { db } from '../firebase'
 import { decrypt, hash, hashRaw } from '../utils/crypto'
 import { toTitleCase, toCapitalized } from '../utils/format'
 import { useLanguage } from '../context/LanguageContext'
-import { SearchIcon, CheckCircleIcon, ExclamationIcon, PhoneIcon, ArrowLeftIcon, ArrowRightIcon } from '../components/Icons'
+import { useInstall } from '../context/InstallContext'
+import { SearchIcon, CheckCircleIcon, ExclamationIcon, PhoneIcon, ArrowRightIcon, DocumentIcon } from '../components/Icons'
 import ThemeToggle from '../components/ThemeToggle'
 import LanguageToggle from '../components/LanguageToggle'
 import ShareButton from '../components/ShareButton'
+import HelpModal from '../components/HelpModal'
 import Footer from '../components/Footer'
+
+const QuestionIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3.5 h-3.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+  </svg>
+)
 
 const TYPE_KEYS = {
   educational: 'type_educational',
@@ -18,15 +26,32 @@ const TYPE_KEYS = {
   other:       'type_other',
 }
 
+const DownloadIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 shrink-0">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+  </svg>
+)
+
+const ShareIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-blue-500">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935 2.186Zm0-12.814a2.25 2.25 0 1 0 3.935-2.186 2.25 2.25 0 0 0-3.935 2.186Z" />
+  </svg>
+)
+
 export default function SearchPage() {
   const navigate = useNavigate()
   const { t } = useLanguage()
+  const { prompt, ios, installed, triggerInstall } = useInstall()
   const [input, setInput] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [claimed, setClaimed] = useState(false)
   const [claimerPhone, setClaimerPhone] = useState('')
+  const [showIOSSheet, setShowIOSSheet] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
+
+  const canInstall = !installed && (!!prompt || ios)
 
   const search = async () => {
     if (!input.trim()) return
@@ -82,6 +107,12 @@ export default function SearchPage() {
           <img src="/logo/logo.png" alt="Mukhlis" className="w-16 h-16 mx-auto mb-4 rounded-2xl shadow-sm" />
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{t('app_name')}</h1>
           <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">{t('search_subtitle')}</p>
+          <button
+            onClick={() => setShowHelp(true)}
+            className="inline-flex items-center gap-1.5 mt-2 text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 underline underline-offset-2 transition-colors"
+          >
+            <QuestionIcon /> {t('how_it_works')}
+          </button>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
@@ -193,18 +224,54 @@ export default function SearchPage() {
                 <PhoneIcon className="w-4 h-4" /> {t('call_now')}
               </a>
               <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">{t('public_place')}</p>
-              <button onClick={() => navigate('/')} className="w-full border border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 py-2.5 rounded-xl text-sm">
+              <button onClick={() => { setResult(null); setInput(''); setClaimed(false); setClaimerPhone('') }} className="w-full border border-gray-200 dark:border-gray-700 text-slate-500 dark:text-slate-400 py-2.5 rounded-xl text-sm">
                 {t('done')}
               </button>
             </div>
           )}
         </div>
 
-        <button onClick={() => navigate('/')} className="w-full flex items-center justify-center gap-1.5 mt-5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
-          <ArrowLeftIcon /> {t('back')}
-        </button>
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <button
+            onClick={() => navigate(result ? '/login' : '/login')}
+            className="flex items-center gap-1.5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+          >
+            <DocumentIcon className="w-4 h-4" /> {t('found_doc')}
+          </button>
+
+          {canInstall && (
+            <button
+              onClick={() => prompt ? triggerInstall() : setShowIOSSheet(true)}
+              className="flex items-center gap-1.5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+            >
+              <DownloadIcon /> {t('install_app')}
+            </button>
+          )}
+        </div>
+
         <Footer />
       </div>
+
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+
+      {showIOSSheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-4 bg-black/50" onClick={() => setShowIOSSheet(false)}>
+          <div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl p-5 animate-slide-up" onClick={e => e.stopPropagation()}>
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">{t('ios_title')}</p>
+            <ol className="space-y-2 mb-4">
+              {[t('ios_step1'), t('ios_step2'), t('ios_step3')].map((step, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                  <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-slate-300 text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                  {i === 0 ? <><span>{step}</span><ShareIcon /></> : step}
+                </li>
+              ))}
+            </ol>
+            <button onClick={() => setShowIOSSheet(false)} className="w-full bg-slate-800 dark:bg-slate-700 text-white py-3 rounded-xl text-sm font-semibold">
+              {t('ok')}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

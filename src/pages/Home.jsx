@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className="space-y-3">
           <button
-            onClick={() => navigate('/search')}
+            onClick={() => navigate('/')}
             className="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold px-5 py-4 rounded-2xl transition-all shadow-sm"
           >
             <SearchIcon className="w-5 h-5 shrink-0" />

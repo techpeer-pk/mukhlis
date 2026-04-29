@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { LanguageProvider } from './context/LanguageContext'
+import { InstallProvider } from './context/InstallContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import InstallPrompt from './components/InstallPrompt'
 import Home from './pages/Home'
@@ -14,11 +15,13 @@ export default function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
+      <InstallProvider>
       <AuthProvider>
         <InstallPrompt />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<SearchPage />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/report" element={
@@ -30,6 +33,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </InstallProvider>
       </LanguageProvider>
     </ThemeProvider>
   )

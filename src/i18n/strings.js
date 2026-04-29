@@ -1,7 +1,7 @@
 const strings = {
   en: {
     app_name:            'Mukhlis',
-    back:                '← Back',
+    back:                'Back',
     done:                'Done',
     loading:             'Loading...',
     logout:              'Logout',
@@ -89,6 +89,8 @@ const strings = {
     // Install prompt
     install_text:        'Install app — home screen shortcut, offline access, faster loading.',
     install:             'Install',
+    install_app:         'Install App',
+    install_app_sub:     'Add to home screen for quick access',
     later:               'Later',
     ios_title:           'Add to Home Screen:',
     ios_step1:           'Tap Share button (browser bottom bar)',
@@ -114,7 +116,7 @@ const strings = {
 
   ur: {
     app_name:            'مخلص',
-    back:                '← واپس',
+    back:                'واپس',
     done:                'مکمل',
     loading:             'لوڈ ہو رہا ہے...',
     logout:              'لاگ آؤٹ',
@@ -202,6 +204,8 @@ const strings = {
     // Install prompt
     install_text:        'ایپ انسٹال کریں — ہوم اسکرین، آف لائن، تیز رفتار',
     install:             'انسٹال',
+    install_app:         'ایپ انسٹال کریں',
+    install_app_sub:     'ہوم اسکرین پر شامل کریں — فوری رسائی',
     later:               'بعد میں',
     ios_title:           'ہوم اسکرین پر شامل کریں:',
     ios_step1:           'شیئر بٹن دبائیں (براؤزر نیچے)',
