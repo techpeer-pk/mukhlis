@@ -42,6 +42,14 @@ const strings = {
     // Login
     login_subtitle:      'Login to report a found document',
     continue_google:     'Continue with Google',
+    continue_phone:      'Continue with Phone',
+    or:                  'or',
+    enter_your_phone:    'Enter your phone number',
+    send_otp:            'Send Code',
+    enter_otp:           'Enter the code sent to',
+    verify_otp:          'Verify',
+    change_number:       'Change number',
+    otp_invalid:         'Invalid code. Please try again.',
     login_note_1:        'Only needed to report a found document.',
     login_note_2:        'Searching is always free & anonymous.',
 
@@ -157,6 +165,14 @@ const strings = {
     // Login
     login_subtitle:      'ملا ہوا کاغذ رپورٹ کرنے کے لئے لاگ ان کریں',
     continue_google:     'گوگل سے جاری رہیں',
+    continue_phone:      'فون سے جاری رہیں',
+    or:                  'یا',
+    enter_your_phone:    'اپنا فون نمبر درج کریں',
+    send_otp:            'کوڈ بھیجیں',
+    enter_otp:           'کوڈ درج کریں',
+    verify_otp:          'تصدیق کریں',
+    change_number:       'نمبر تبدیل کریں',
+    otp_invalid:         'غلط کوڈ۔ دوبارہ کوشش کریں۔',
     login_note_1:        'صرف رپورٹ کرنے کے لئے درکار ہے۔',
     login_note_2:        'تلاش ہمیشہ مفت اور گمنام ہے۔',
 
