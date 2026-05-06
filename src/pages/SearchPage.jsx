@@ -234,7 +234,7 @@ export default function SearchPage() {
         <div className="mt-4 flex items-center justify-between gap-3">
           <button
             onClick={() => navigate(result ? '/login' : '/login')}
-            className="flex items-center gap-1.5 text-slate-400 dark:text-slate-600 text-sm hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+            className="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-sm font-semibold px-3 py-2 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors"
           >
             <DocumentIcon className="w-4 h-4" /> {t('found_doc')}
           </button>
